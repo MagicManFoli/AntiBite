@@ -2,13 +2,11 @@ import time
 
 import cv2
 
-# define classifier for face/fingers
+# define classifier for faces
 cascPath = "haarcascade_frontalface_default.xml"  # from openCV folder
 faceCascade = cv2.CascadeClassifier(cascPath)  # identification stats
-
-
 # fingers
-# ...
+# TODO insert
 
 # ---- NOTES -----
 # finger detection depends on background subtraction, this is contrary to face detection.
@@ -30,11 +28,11 @@ def find_faces(frame):
 
 
 def find_fingers(frame):
-    # same as faces
+    # TODO same structure as faces
     return []
 
 
-def show_detection():
+def show_detection(frame, faces, fingers):
     # Draw rectangles around the faces
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -52,8 +50,9 @@ print("\nStarting video stream")
 video_feed = cv2.VideoCapture(0)
 
 while not video_feed.isOpened():
-    print(".", end="")
-    time.sleep(0.5)
+    print(".", end="")  # print waiting time as increasing number of dots
+    time.sleep(0.2)
+    # TODO if time > threshold cancel program
 
 print("Video Feed running, starting window output")
 
@@ -70,7 +69,7 @@ while True:
 
     # TODO check for intersection of both, send warning if true
 
-    show_detection()
+    show_detection(frame, faces, fingers)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):  # needed for imshow to work
         break
