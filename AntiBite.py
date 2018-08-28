@@ -13,6 +13,7 @@ faceCascade = cv2.CascadeClassifier(cascPath)  # identification stats
 # project is ON HOLD for the time being.
 
 # ---- functions ----
+connection_timeout = 5
 
 
 def find_faces(frame):
@@ -41,18 +42,25 @@ def show_detection(frame, faces, fingers):
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
     cv2.imshow("Live Video Feed", frame)
 
+    
+def get_timeref():
+    return round(time.perf_counter(), 4)
+
 
 # --- main ---
 print("Hello to Antibite")
 print("Using OpenCV Version: " + cv2.__version__)
 
-print("\nStarting video stream")
+print("\nStarting video stream.", end="")
+start_time = get_timeref()
 video_feed = cv2.VideoCapture(0)
 
 while not video_feed.isOpened():
-    print(".", end="")  # print waiting time as increasing number of dots
+    print(".", end="", flush=True)  # print waiting time as increasing number of dots
     time.sleep(0.2)
-    # TODO if time > threshold cancel program
+    if (get_timeref() - start_time) > connection_timeout:
+        print("./")
+        raise TimeoutError
 
 print("Video Feed running, starting window output")
 
